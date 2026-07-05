@@ -13,6 +13,7 @@ import 'components/bear_boss.dart';
 import 'components/trex_boss.dart';
 import 'components/mother_boss.dart';
 import 'components/old_man_boss.dart';
+import 'components/boss_cut_in.dart';
 import 'components/cloud_effect.dart';
 import '../managers/game_config.dart';
 
@@ -136,8 +137,15 @@ class BabyDashGame extends FlameGame with TapCallbacks {
 
   void startBossBattle() {
     isBossBattle = true;
-    boss = Boss();
-    add(boss!);
+    add(BossCutIn(
+      imagePath: 'boss.png',
+      title: 'BROTHER BOSS',
+      onComplete: () {
+        boss = Boss();
+        add(boss!);
+        // Brother Boss BGM is not explicitly set, so it continues 'bgm.mp3'
+      },
+    ));
   }
 
   void onBossDefeated() {
@@ -148,12 +156,17 @@ class BabyDashGame extends FlameGame with TapCallbacks {
   
   void startBearBossBattle() {
     isBossBattle = true;
-    bearBoss = BearBoss();
-    add(bearBoss!);
-    
-    // BGMをボス戦用（燃え上がるコア）に切り替える
-    FlameAudio.bgm.stop();
-    FlameAudio.bgm.play('boss_bgm.mp3');
+    add(BossCutIn(
+      imagePath: 'bear_boss.png',
+      title: 'BEAR BOSS',
+      onComplete: () {
+        bearBoss = BearBoss();
+        add(bearBoss!);
+        
+        FlameAudio.bgm.stop();
+        FlameAudio.bgm.play('boss_bgm.mp3');
+      },
+    ));
   }
 
   void onBearBossDefeated() {
@@ -164,11 +177,17 @@ class BabyDashGame extends FlameGame with TapCallbacks {
 
   void startTRexBossBattle() {
     isBossBattle = true;
-    tRexBoss = TRexBoss();
-    add(tRexBoss!);
-    
-    FlameAudio.bgm.stop();
-    FlameAudio.bgm.play('trex_boss_bgm.mp3');
+    add(BossCutIn(
+      imagePath: 'trex_boss.png',
+      title: 'T-REX BOSS',
+      onComplete: () {
+        tRexBoss = TRexBoss();
+        add(tRexBoss!);
+        
+        FlameAudio.bgm.stop();
+        FlameAudio.bgm.play('trex_boss_bgm.mp3');
+      },
+    ));
   }
 
   void onTRexBossDefeated() {
@@ -179,11 +198,17 @@ class BabyDashGame extends FlameGame with TapCallbacks {
 
   void startMotherBossBattle() {
     isBossBattle = true;
-    motherBoss = MotherBoss();
-    add(motherBoss!);
-    
-    FlameAudio.bgm.stop();
-    FlameAudio.bgm.play('mother_boss_bgm.mp3');
+    add(BossCutIn(
+      imagePath: 'mother_boss.png',
+      title: 'MOTHER BOSS',
+      onComplete: () {
+        motherBoss = MotherBoss();
+        add(motherBoss!);
+        
+        FlameAudio.bgm.stop();
+        FlameAudio.bgm.play('mother_boss_bgm.mp3');
+      },
+    ));
   }
 
   void onMotherBossDefeated() {
@@ -194,11 +219,17 @@ class BabyDashGame extends FlameGame with TapCallbacks {
 
   void startOldManBossBattle() {
     isBossBattle = true;
-    oldManBoss = OldManBoss();
-    add(oldManBoss!);
-    
-    FlameAudio.bgm.stop();
-    FlameAudio.bgm.play('old_man_boss_bgm.mp3');
+    add(BossCutIn(
+      imagePath: 'small_old_man.png',
+      title: 'CHISAI OSSAN',
+      onComplete: () {
+        oldManBoss = OldManBoss();
+        add(oldManBoss!);
+        
+        FlameAudio.bgm.stop();
+        FlameAudio.bgm.play('old_man_boss_bgm.mp3');
+      },
+    ));
   }
 
   void onOldManBossDefeated() {
