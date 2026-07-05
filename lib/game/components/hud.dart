@@ -29,27 +29,31 @@ class Hud extends PositionComponent with HasGameReference<BabyDashGame> {
     // ゲームステータス（ボスHP・クリア表示）を追加
     add(GameStatusText());
 
-    // ジャンプボタン (右下)
-    add(VirtualButton(
-      text: 'JUMP',
-      color: Colors.blueAccent,
-      position: Vector2(game.size.x - 100, game.size.y - 100),
-      onPressed: () => game.player.jump(),
-    ));
+    // ３つのスキルボタンを中央に配置する
+    final double centerX = game.size.x / 2;
+    final double buttonY = game.size.y - 100;
+    
+    // スーパーギャン泣きボタン (中央から左へ配置)
+    add(SuperCryButton(position: Vector2(centerX - 140, buttonY)));
 
-    // スーパーギャン泣きボタン (左下)
-    add(SuperCryButton(position: Vector2(20, game.size.y - 100)));
-
-    // 必殺技ボタン (中央下)
+    // 必殺技ボタン (中央に配置)
     add(VirtualButton(
       text: 'SPECIAL',
       color: Colors.pinkAccent,
-      position: Vector2(game.size.x / 2 - 40, game.size.y - 100),
+      position: Vector2(centerX - 40, buttonY),
       onPressed: () {
         if (game.player.power >= 100) {
           game.player.activateSpecial();
         }
       },
+    ));
+
+    // ジャンプボタン (中央から右へ配置)
+    add(VirtualButton(
+      text: 'JUMP',
+      color: Colors.blueAccent,
+      position: Vector2(centerX + 60, buttonY),
+      onPressed: () => game.player.jump(),
     ));
   }
 }
@@ -147,10 +151,35 @@ class GameStatusText extends TextComponent with HasGameReference<BabyDashGame> {
       text = 'BEAR BOSS HP: ${game.bearBoss!.hp}/10';
       textRenderer = TextPaint(style: const TextStyle(fontSize: 40, color: Colors.purpleAccent, fontWeight: FontWeight.bold));
       position = Vector2(game.size.x / 2 - 200, 20);
+    } else if (game.stage == 3 && game.isBossBattle && game.tRexBoss != null && !game.tRexBoss!.isDefeated) {
+      text = 'T-REX BOSS HP: ${game.tRexBoss!.hp}/15';
+      textRenderer = TextPaint(style: const TextStyle(fontSize: 40, color: Colors.green, fontWeight: FontWeight.bold));
+      position = Vector2(game.size.x / 2 - 200, 20);
+    } else if (game.stage == 4 && game.isBossBattle && game.motherBoss != null && !game.motherBoss!.isDefeated) {
+      text = 'MOTHER BOSS HP: ${game.motherBoss!.hp}/20';
+      textRenderer = TextPaint(style: const TextStyle(fontSize: 40, color: Colors.purple, fontWeight: FontWeight.bold));
+      position = Vector2(game.size.x / 2 - 200, 20);
+    } else if (game.stage == 5 && game.isBossBattle && game.oldManBoss != null && !game.oldManBoss!.isDefeated) {
+      int remaining = game.oldManBoss!.survivalTime.ceil();
+      text = 'SURVIVE! 残り: $remaining秒';
+      textRenderer = TextPaint(style: const TextStyle(fontSize: 40, color: Colors.pink, fontWeight: FontWeight.bold));
+      position = Vector2(game.size.x / 2 - 200, 20);
     } else if (game.stage == 2 && !game.isBossBattle && game.stage2TransitionTimer < 3.0) {
       text = 'STAGE 2 START!';
       textRenderer = TextPaint(style: const TextStyle(fontSize: 60, color: Colors.orangeAccent, fontWeight: FontWeight.bold));
       position = Vector2(game.size.x / 2 - 250, game.size.y / 2 - 50);
+    } else if (game.stage == 3 && !game.isBossBattle && game.stage3TransitionTimer < 3.0) {
+      text = 'STAGE 3 START!';
+      textRenderer = TextPaint(style: const TextStyle(fontSize: 60, color: Colors.deepOrangeAccent, fontWeight: FontWeight.bold));
+      position = Vector2(game.size.x / 2 - 250, game.size.y / 2 - 50);
+    } else if (game.stage == 4 && !game.isBossBattle && game.stage4TransitionTimer < 3.0) {
+      text = 'STAGE 4 START!';
+      textRenderer = TextPaint(style: const TextStyle(fontSize: 60, color: Colors.redAccent, fontWeight: FontWeight.bold));
+      position = Vector2(game.size.x / 2 - 250, game.size.y / 2 - 50);
+    } else if (game.stage == 5 && !game.isBossBattle && game.stage5TransitionTimer < 3.0) {
+      text = 'FINAL STAGE START!';
+      textRenderer = TextPaint(style: const TextStyle(fontSize: 60, color: Colors.red, fontWeight: FontWeight.bold));
+      position = Vector2(game.size.x / 2 - 280, game.size.y / 2 - 50);
     } else {
       text = '';
     }

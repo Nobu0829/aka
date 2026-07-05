@@ -10,7 +10,11 @@ import 'components/scrolling_background.dart';
 import 'components/hud.dart';
 import 'components/boss.dart';
 import 'components/bear_boss.dart';
+import 'components/trex_boss.dart';
+import 'components/mother_boss.dart';
+import 'components/old_man_boss.dart';
 import 'components/cloud_effect.dart';
+import '../managers/game_config.dart';
 
 class BabyDashGame extends FlameGame with TapCallbacks {
   late BabyPlayer player;
@@ -23,12 +27,18 @@ class BabyDashGame extends FlameGame with TapCallbacks {
   // ステージ管理
   int stage = 1;
   double stage2TransitionTimer = 0.0;
+  double stage3TransitionTimer = 0.0;
+  double stage4TransitionTimer = 0.0;
+  double stage5TransitionTimer = 0.0;
   bool isBossBattle = false;
   bool isGameCleared = false;
   bool isGameOver = false;
   
   Boss? boss;
   BearBoss? bearBoss;
+  TRexBoss? tRexBoss;
+  MotherBoss? motherBoss;
+  OldManBoss? oldManBoss;
 
   @override
   Color backgroundColor() => const Color(0xFFE1F5FE);
@@ -52,7 +62,11 @@ class BabyDashGame extends FlameGame with TapCallbacks {
       if (!isBossBattle) {
         playTime += dt;
         if (playTime >= 30.0) {
-          startBossBattle();
+          if (GameConfig().enableBrotherBoss) {
+            startBossBattle();
+          } else {
+            onBossDefeated(); // すぐに次のステージへ
+          }
         }
         _spawnObstacles(dt);
       }
@@ -60,9 +74,49 @@ class BabyDashGame extends FlameGame with TapCallbacks {
       if (!isBossBattle) {
         stage2TransitionTimer += dt;
         if (stage2TransitionTimer >= 10.0) {
-          startBearBossBattle();
+          if (GameConfig().enableBearBoss) {
+            startBearBossBattle();
+          } else {
+            onBearBossDefeated(); // すぐに次のステージへ
+          }
         }
         _spawnObstacles(dt, speedMultiplier: 1.2);
+      }
+    } else if (stage == 3) {
+      if (!isBossBattle) {
+        stage3TransitionTimer += dt;
+        if (stage3TransitionTimer >= 10.0) {
+          if (GameConfig().enableTRexBoss) {
+            startTRexBossBattle();
+          } else {
+            onTRexBossDefeated(); // すぐに次のステージへ
+          }
+        }
+        _spawnObstacles(dt, speedMultiplier: 1.5);
+      }
+    } else if (stage == 4) {
+      if (!isBossBattle) {
+        stage4TransitionTimer += dt;
+        if (stage4TransitionTimer >= 10.0) {
+          if (GameConfig().enableMotherBoss) {
+            startMotherBossBattle();
+          } else {
+            onMotherBossDefeated(); // すぐに次のステージへ
+          }
+        }
+        _spawnObstacles(dt, speedMultiplier: 1.8);
+      }
+    } else if (stage == 5) {
+      if (!isBossBattle) {
+        stage5TransitionTimer += dt;
+        if (stage5TransitionTimer >= 5.0) { // すぐ登場する
+          if (GameConfig().enableOldManBoss) {
+            startOldManBossBattle();
+          } else {
+            onOldManBossDefeated(); // すぐにクリア処理へ
+          }
+        }
+        _spawnObstacles(dt, speedMultiplier: 2.0); // さらに速い
       }
     }
   }
@@ -102,7 +156,52 @@ class BabyDashGame extends FlameGame with TapCallbacks {
     FlameAudio.bgm.play('boss_bgm.mp3');
   }
 
-  void onStage2Cleared() {
+  void onBearBossDefeated() {
+    isBossBattle = false;
+    stage = 3;
+    bearBoss = null;
+  }
+
+  void startTRexBossBattle() {
+    isBossBattle = true;
+    tRexBoss = TRexBoss();
+    add(tRexBoss!);
+    
+    FlameAudio.bgm.stop();
+    FlameAudio.bgm.play('trex_boss_bgm.mp3');
+  }
+
+  void onTRexBossDefeated() {
+    isBossBattle = false;
+    stage = 4;
+    tRexBoss = null;
+  }
+
+  void startMotherBossBattle() {
+    isBossBattle = true;
+    motherBoss = MotherBoss();
+    add(motherBoss!);
+    
+    FlameAudio.bgm.stop();
+    FlameAudio.bgm.play('mother_boss_bgm.mp3');
+  }
+
+  void onMotherBossDefeated() {
+    isBossBattle = false;
+    stage = 5;
+    motherBoss = null;
+  }
+
+  void startOldManBossBattle() {
+    isBossBattle = true;
+    oldManBoss = OldManBoss();
+    add(oldManBoss!);
+    
+    FlameAudio.bgm.stop();
+    FlameAudio.bgm.play('old_man_boss_bgm.mp3');
+  }
+
+  void onOldManBossDefeated() {
     isGameCleared = true;
     FlameAudio.bgm.stop();
   }

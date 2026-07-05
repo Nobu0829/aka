@@ -113,6 +113,12 @@ class BabyPlayer extends SpriteComponent with HasGameReference<BabyDashGame> {
       if (game.bearBoss != null && !game.bearBoss!.isDefeated) {
         game.bearBoss!.takeDamage();
       }
+      if (game.tRexBoss != null && !game.tRexBoss!.isDefeated) {
+        game.tRexBoss!.takeDamage();
+      }
+      if (game.motherBoss != null && !game.motherBoss!.isDefeated) {
+        game.motherBoss!.takeDamage();
+      }
     }
   }
 

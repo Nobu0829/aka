@@ -43,6 +43,20 @@ class Beam extends PositionComponent with HasGameReference<BabyDashGame> {
         removeFromParent();
         return;
       }
+    } else if (game.stage == 3 && game.isBossBattle && game.tRexBoss != null && !game.tRexBoss!.isDefeated) {
+      final bossRect = game.tRexBoss!.toRect().deflate(30.0);
+      if (beamRect.right >= bossRect.left && beamRect.left <= bossRect.right) {
+        game.tRexBoss!.takeDamage();
+        removeFromParent();
+        return;
+      }
+    } else if (game.stage == 4 && game.isBossBattle && game.motherBoss != null && !game.motherBoss!.isDefeated) {
+      final bossRect = game.motherBoss!.toRect().deflate(30.0);
+      if (beamRect.right >= bossRect.left && beamRect.left <= bossRect.right) {
+        game.motherBoss!.takeDamage();
+        removeFromParent();
+        return;
+      }
     }
 
     final obstacles = game.children.query<Obstacle>();

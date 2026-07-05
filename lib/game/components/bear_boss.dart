@@ -72,7 +72,7 @@ class BearBoss extends SpriteComponent with HasGameReference<BabyDashGame> {
       isDefeated = true;
       game.add(CloudEffect(position: position.clone(), sizeMultiplier: 8.0, life: 1.5));
       removeFromParent();
-      game.onStage2Cleared();
+      game.onBearBossDefeated();
     }
   }
 }
